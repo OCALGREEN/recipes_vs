@@ -4,12 +4,14 @@ from flask_bcrypt import Bcrypt
 from flask_app import app
 bcrypt = Bcrypt(app) 
 
+# HOME
 @app.route("/")
 def home():
     if "uuid" in session: # will send the user to the dashboard if they have signed in and not out yet
         return redirect("/dashboard")
     return render_template("index.html")
 
+# REGISTER POST REDIRECT
 @app.route("/register", methods=["POST"])
 def register():
     if not User.register_validator(request.form): # will check to see if all inputs are valid
@@ -20,12 +22,14 @@ def register():
         session["uuid"] = User.create(user_data) # adds the user data to session to user late
         return redirect("/dashboard")
 
+# DASHBOARD
 @app.route("/dashboard")
 def success():
     if "uuid" not in session: # will send the user back to the home page if they are not logged in
         return redirect("/") 
     return render_template("dashboard.html", user = User.get_by_id({"id": session["uuid"]})) # renders dashboard and uses the id in session to grab user information
 
+# LOGIN
 @app.route("/login", methods=["POST"])
 def login():
     if not User.login_validator(request.form): # checks the email and password entered 
@@ -35,11 +39,13 @@ def login():
         session["uuid"] = user.id # puts the id in session
         return redirect("/dashboard")
 
+# LOGOUT
 @app.route("/logout")
 def logout():
     session.clear() # will clear session to prevent the user from entering without logging in
     return redirect("/")
 
+# CREATE NEW RECIPE
 @app.route("/create/new/recipe")
 def create_new_recipe():
     return render_template("createnewrecipe.html")
