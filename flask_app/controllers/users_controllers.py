@@ -31,7 +31,7 @@ def login():
     if not User.login_validator(request.form): # checks the email and password entered 
         return redirect("/")
     else: 
-        user = User.get_by_email({"emai": request.form["email"]}) # gets the user id and puts in the email
+        user = User.get_by_email({"email": request.form["email"]}) # gets the user id and puts in the email
         session["uuid"] = user.id # puts the id in session
         return redirect("/dashboard")
 
@@ -39,3 +39,7 @@ def login():
 def logout():
     session.clear() # will clear session to prevent the user from entering without logging in
     return redirect("/")
+
+@app.route("/create/new/recipe")
+def create_new_recipe():
+    return render_template("createnewrecipe.html")

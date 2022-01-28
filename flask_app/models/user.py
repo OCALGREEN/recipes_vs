@@ -25,6 +25,7 @@ class User:
     @classmethod # GET ID
     def get_by_id(cls, data):
         query = "SELECT * FROM users WHERE id = %(id)s;"
+        print("QUERY IS: ", query)
         result = connectToMySQL("recipes_schema").query_db(query, data)
         return cls(result[0])
     
@@ -32,6 +33,7 @@ class User:
     def get_by_email(cls, data):
         query = "SELECT * FROM users WHERE email = %(email)s;"
         result = connectToMySQL("recipes_schema").query_db(query, data)
+        print("RESULT", result)
         if len(result) < 1: # if the email entered is not in the database then return false
             return False
         return cls(result[0])
@@ -42,10 +44,10 @@ class User:
         if not EMAIL_REGEX.match(post_data["email"]): # validate the email address
             flash("Please enter a valid email adress") # if the email does not match the email_regex format
             is_valid = False
-        if len(post_data["first_name"]) < 3: # validates the first name
+        if len(post_data["first_name"]) < 2: # validates the first name
             flash("Please enter a valid first name")
             is_valid = False 
-        if len(post_data["last_name"]) < 3: # validates the last name
+        if len(post_data["last_name"]) < 2: # validates the last name
             flash("Please enter a valid last name")
             is_valid = False 
         if len(post_data["password"]) < 6: # validates the password
